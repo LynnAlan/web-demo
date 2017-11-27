@@ -7,6 +7,6 @@
 - [css 模块触底](https://www.w3cplus.com/css/css-sticky-foot-at-bottom-of-the-page)
 
 ### js学习资料
--[react官网](https://doc.react-china.org/)
--[react入门](http://jspang.com/2017/10/22/react-all-01/)
--[react全家桶实践](http://www.jianshu.com/p/43c604177c08)
+- [react官网](https://doc.react-china.org/)
+- [react入门](http://jspang.com/2017/10/22/react-all-01/)
+- [react全家桶实践](http://www.jianshu.com/p/43c604177c08)
