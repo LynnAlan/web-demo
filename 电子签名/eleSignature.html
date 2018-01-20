@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>手写签名</title>
+    <style>
+        canvas {
+            width: 400px;
+            height: 400px;
+            background: #ededed
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <canvas id="canvas" width="400" height="400"></canvas>
+    </div>
+    <script>
+        function electronicSignature(canvas) {
+            if (!canvas) {
+                return;
+            }
+            var context = canvas.getContext('2d');
+            context.lineWidth = 2;
+            context.strokeStyle = 'black';
+            context.shadowBlur = 1;
+            context.shadowColor = 'black';
+            var currentPosition = {};
+            var left = canvas.getBoundingClientRect().left;
+            var top = canvas.getBoundingClientRect().top;
+            var isMousemove = false; //用来标记 mousedown 在 mousemove之前执行
+            var isMobile = /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Windows Phone)/i.test(navigator.userAgent);
+            var lineUp = function (signalType) {
+                if (signalType == 1) {
+                    context.beginPath();
+                    context.moveTo(currentPosition.x, currentPosition.y);
+                } else {
+                    context.lineTo(currentPosition.x, currentPosition.y);
+                    context.stroke();
+                }
+            }
+            var lineUpType = function (signalType) {
+                return function (e) {
+                    e.preventDefault();
+                    if (signalType == 1) {
+                        isMousemove = true;
+                    }
+                    if (signalType == 1 || isMousemove) {
+                        e = isMobile ? e.touches[0] : e;
+                        currentPosition.x = e.clientX - left;
+                        currentPosition.y = e.clientY - top;
+                        lineUp(signalType);
+                    }
+                }
+            }
+            if (isMobile) {
+                canvas.addEventListener('touchstart', lineUpType(1));
+                canvas.addEventListener('touchmove', lineUpType());
+            } else {
+                canvas.addEventListener('mousedown', lineUpType(1));
+                canvas.addEventListener('mousemove', lineUpType());
+                ['mouseup', 'mouseleave'].forEach(function (item) {
+                    canvas.addEventListener(item, function () {
+                        isMousemove = false;
+                    });
+                });
+            }
+
+        };
+        var canvas = document.getElementById('canvas');
+        electronicSignature(canvas);
+    </script>
+</body>
+
+</html>
