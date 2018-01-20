@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>放大镜</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        .product {
+            border: 1px solid #eee;
+            width: 400px;
+            height: 400px;
+            margin-top: 100px;
+            margin-left: 100px;
+            position: relative;
+        }
+
+        .smallArea {
+            width: 380px;
+            height: 380px;
+            margin: 0 auto;
+            margin-top: 10px;
+            border: 1px solid #eee;
+            position: relative;
+
+        }
+
+        .smallArea>img {
+            width: 100%;
+            height: 100%;
+        }
+
+        #small {
+            width: 400px;
+            height: 72px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        #small div {
+            width: 340px;
+            height: 72px;
+            overflow: hidden;
+            position: absolute;
+            left: 30px;
+            top: 0px;
+        }
+
+        #small ul {
+            height: 72px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+        }
+
+        #small li {
+            width: 68px;
+            height: 72px;
+            float: left;
+            text-align: center;
+        }
+
+        .spanleft {
+            display: block;
+            width: 20px;
+            height: 72px;
+            line-height: 72px;
+            background-color: #eee;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            cursor: pointer;
+        }
+
+        .spanright {
+            display: block;
+            width: 20px;
+            height: 72px;
+            line-height: 72px;
+            background-color: #eee;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            cursor: pointer;
+        }
+
+        .smallArea #area {
+            width: 150px;
+            height: 150px;
+            background: rgba(100, 222, 200, 0.7);
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            display: none;
+            cursor: move;
+        }
+
+        .bigArea {
+            width: 420px;
+            height: 420px;
+            position: absolute;
+            left: 420px;
+            top: 0px;
+            border: 1px solid #eee;
+            overflow: hidden;
+            display: none;
+        }
+
+        .bigArea #bigImg {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            /*默认获取不到图片的高度*/
+            width: 800px;
+            height: 800px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="product" id="product">
+        <div id="smallArea" class="smallArea">
+            <img id="mimg" src="images/smell.jpg" />
+            <div id="area"></div>
+        </div>
+        <div id="bigArea" class="bigArea">
+            <img id="bigImg" src="images/big.jpg" />
+        </div>
+    
+        <script>
+            //简单计算器
+            function $(selector) {
+                if (!selector) {
+                    return
+                }
+                if (selector.split(' ').length == 1) {
+                    return document.querySelector(selector)
+                } else {
+                    return document.querySelectorAll(selector)
+                }
+            }
+            var product = $('#product')
+            var area = $('#area');/*透明区块*/
+            var smallArea = $('#smallArea');/*透明区块父级*/
+            var bigArea = $('#bigArea');/*大图区块*/
+            var bigImg = $('#bigImg');/*大图*/
+            //透明区块父级与大图的比例：
+            var step = parseInt(getStyle(bigImg, 'width')) / parseInt(getStyle(smallArea, 'width'))
+            // console.log(step)
+            smallArea.onmouseenter = function () {
+                area.style.display = "block";
+                bigArea.style.display = "block";
+            }
+            smallArea.onmousemove = function (e) {
+                e = e || window.event;
+                var left = e.clientX - (area.offsetWidth / 2) - smallArea.offsetLeft - product.offsetLeft;
+                var top = e.clientY - (area.offsetHeight / 2) - smallArea.offsetTop - product.offsetTop;
+                // console.log(left,top);
+                //判断边界
+                if (left < 0) {
+                    left = 0
+                }
+                if (top < 0) {
+                    top = 0
+                }
+                if (left > smallArea.offsetWidth - area.offsetWidth) {
+                    left = smallArea.offsetWidth - area.offsetWidth
+                }
+                if (top > smallArea.offsetHeight - area.offsetHeight) {
+                    top = smallArea.offsetHeight - area.offsetHeight
+                }
+
+                //设置移动：
+                area.style.left = left + 'px';
+                area.style.top = top + 'px';
+                bigImg.style.left = -left * step + 'px';
+                bigImg.style.top = -top * step + 'px';
+
+            }
+            smallArea.onmouseleave = function () {
+                area.style.display = "none";
+                bigArea.style.display = "none";
+            }
+
+            //获取计算后的样式
+            function getStyle(el, attr) {
+                if (getComputedStyle) {
+                    return getComputedStyle(el, '')[attr];
+                } else {
+                    return el.currentStyle[attr];
+                }
+            }				
+        </script>
+</body>
+
+</html>
