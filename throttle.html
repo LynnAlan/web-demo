@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>throttle</title>
+</head>
+<body>
+    <button id="throttle">test 节流！</button>
+    <script>
+        window.onload = function (){
+            document.getElementById('throttle').addEventListener('click',throttle(testThrottle))
+        }
+        //节流 不管你怎么调用（调用多少次），在规定时间内，我只会执行一次
+        function throttle(cb,await=1000) {
+            let timer = null ;
+            return function(){
+                if(!timer){
+                    timer = setTimeout(()=>{
+                        timer = null;
+                        cb.call(this,arguments);
+                    },await)
+                }
+            }
+        }
+        function testThrottle(){
+            console.log('test throttle')
+        }
+    </script>
+</body>
+</html>

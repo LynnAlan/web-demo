@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>防抖</title>
+</head>
+<body>
+  <button id="debounce">test防抖！</button>
+  <script>
+    window.onload = function() {
+      var myDebounce = document.getElementById("debounce");
+      myDebounce.addEventListener("click", debounce(testDebounce));
+    }
+    //防抖 不管调用多少次，以最后一次为执行基准
+    function debounce(cb,await=1000){
+        let timer = null;
+        return function (){
+            clearTimeout(timer);
+            timer = setTimeout(()=>{
+                cb.call(this,arguments)
+            },await)
+        }
+    }
+    function testDebounce() {
+      console.log("防抖成功！");
+    }
+  </script>
+</body>
+</html>
